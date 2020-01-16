@@ -1,28 +1,25 @@
 package net.cnam.inf330;
 
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Class for implementing the simulation system.
  */
-// TODO 6.a) Make AirportSimulator an Observer object
-public class AirportSimulator {
+public class AirportSimulator implements Observer {
 
     private final int NUM_RUNWAYS = 3;
 
     private int tick;
     private int planeCount;
-    // TODO 1.a) Declare a PriorityQueue to store the flying planes waiting to land
-    //private ... flyingPlanes;
-    // TODO 1.b) Declare a Queue (LinkedList) to store the landed planes waiting to take off
-    //private ... landedPlanes;
+
+    private PriorityQueue<Plane> flyingPlanes;
+    private Queue landedPlanes;
 
     public AirportSimulator() {
         this.tick = 1;
         this.planeCount = 0;
-        //...
+        flyingPlanes = new PriorityQueue<Plane>(10, new PlaneFuelComparator());
+        landedPlanes = new LinkedList();
     }
 
     /**
@@ -32,7 +29,7 @@ public class AirportSimulator {
      * @param numNewTakingOff       The number of new planes on the ground waiting to take off
      * @param fuelCapacitiesLanding The starting fuel capacity of each plane in the air waiting to land
      */
-    public void simulateTurnWithNewPlanes(int numNewLanding, int numNewTakingOff, int[] fuelCapacitiesLanding) {
+    public void simulateTurnWithNewPlanes(int numNewLanding, int numNewTakingOff, int[] fuelCapacitiesLanding) throws InvalidFuelCapacityException {
         System.out.println();
         System.out.println("=====================================================================");
         System.out.println("Turn " + this.tick + " : creating new planes");
@@ -94,12 +91,12 @@ public class AirportSimulator {
         while ((!landedPlanes.isEmpty() || !flyingPlanes.isEmpty()) && numRunwaysUsed < NUM_RUNWAYS) {
             // If there are more landed planes than flying planes, fly planes
             if (landedPlanes.size() > flyingPlanes.size()) {
-                Plane planeToTakeOff = landedPlanes.poll();
+                Plane planeToTakeOff = (Plane) landedPlanes.poll();
                 planeToTakeOff.takeOff(numRunwaysUsed);
             }
             // Otherwise, land planes
             else {
-                Plane planeToLand = flyingPlanes.poll();
+                Plane planeToLand = (Plane) flyingPlanes.poll();
                 planeToLand.land(numRunwaysUsed);
             }
             numRunwaysUsed++;
@@ -120,10 +117,12 @@ public class AirportSimulator {
      * @param fuelCapacity
      * @param flying
      */
-    // TODO 4. Throw an InvalidFuelCapacityException when fuelCapacity is negative
-    private void createPlane(int fuelCapacity, boolean flying) {
+    public void createPlane(int fuelCapacity, boolean flying) throws InvalidFuelCapacityException {
+
+        if(fuelCapacity<0) throw new InvalidFuelCapacityException("Fuel capacity is negative");
+
         String name = "Plane" + planeCount++;
-        Plane plane = new Plane(this.tick, name, flying, fuelCapacity);
+        Plane plane = new NormalPlane(this.tick, name, flying, fuelCapacity);
         System.out.println("Created plane : " + name + " (" + fuelCapacity + ", " +
                 (flying ? "air" : "ground") + ")");
         if (flying)
@@ -140,5 +139,26 @@ public class AirportSimulator {
     public boolean isSimulationOver() {
         // Simulation is over if both queues are empty, otherwise it can continue
         return this.flyingPlanes.isEmpty() && this.landedPlanes.isEmpty();
+    }
+
+    public PriorityQueue<Plane> getFlyingPlanes() {
+        return flyingPlanes;
+    }
+
+    public void setFlyingPlanes(PriorityQueue<Plane> flyingPlanes) {
+        this.flyingPlanes = flyingPlanes;
+    }
+
+    public Queue getLandedPlanes() {
+        return landedPlanes;
+    }
+
+    public void setLandedPlanes(Queue landedPlanes) {
+        this.landedPlanes = landedPlanes;
+    }
+
+    @Override
+    public void update(Plane o, Object arg) {
+        System.out.println("FirstNewsReader got The news:"+(String)arg);
     }
 }

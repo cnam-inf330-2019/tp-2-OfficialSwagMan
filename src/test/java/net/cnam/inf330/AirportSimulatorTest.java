@@ -3,6 +3,8 @@ package net.cnam.inf330;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 
+import java.sql.SQLOutput;
+
 import static org.junit.Assert.*;
 
 /**
@@ -10,22 +12,30 @@ import static org.junit.Assert.*;
  */
 public class AirportSimulatorTest {
 
-    // TODO 2. Write a method for testing the PriorityQueue
-    //...
+    @Test
+    public void testPriorityQueue() throws InvalidFuelCapacityException {
+        AirportSimulator simulator = new AirportSimulator();
+        simulator.createPlane(2, true);
+        simulator.createPlane(1, true);
+        simulator.createPlane(3, true);
+        String list = "";
+        while (!simulator.getFlyingPlanes().isEmpty()) {
+            list+=simulator.getFlyingPlanes().poll().getName();
+        }
 
-    /* TODO 5. Complete this method for testing the InvalidFuelCapacityException in the
-        AirportSimulator::createPlane method
-     */
+        assertEquals("Plane2Plane0Plane1",list.toString());
+    }
+
     @Test
     public void testInvalidFuelCapacityException() {
         AirportSimulator simulator = new AirportSimulator();
         ThrowingRunnable tr = () -> simulator.simulateTurnWithNewPlanes(3, 3, new int[]{1, 1, -1});
 
-        //assertThrows(...);
+        assertThrows(InvalidFuelCapacityException.class, tr);
     }
 
     @Test
-    public void testScenario1() {
+    public void testScenario1() throws InvalidFuelCapacityException {
         // Simulate scenario 1
         AirportSimulator simulator = new AirportSimulator();
         simulator.simulateTurnWithNewPlanes(3, 3, new int[]{1, 1, 1});
