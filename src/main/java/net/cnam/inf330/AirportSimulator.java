@@ -158,7 +158,7 @@ public class AirportSimulator implements Observer {
     }
 
     @Override
-    public void update(Plane o, Object arg) {
-        System.out.println("FirstNewsReader got The news:"+(String)arg);
+    public void update(Observable o, Object arg) {
+        System.out.println("Action"+(String)arg);
     }
 }

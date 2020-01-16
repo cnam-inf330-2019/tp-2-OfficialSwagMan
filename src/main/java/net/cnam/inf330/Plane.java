@@ -28,6 +28,7 @@ public abstract class Plane extends Observable implements IPlane {
     public void takeOff(int runway) {
         this.isFlying = true;
         System.out.println("Plane taking off from runway " + runway + " : " + this.name);
+        notifyObservers("takeoff");
     }
 
     public void land(int runway) {
@@ -36,11 +37,13 @@ public abstract class Plane extends Observable implements IPlane {
             System.out.println("Plane landing (emergency) on runway " + runway + " : " + this.name);
         else
             System.out.println("Plane landing on runway " + runway + " : " + this.name);
+        notifyObservers("land");
     }
 
     public void crash() {
         this.isFlying = false;
         System.out.println("Plane crashing : " + this.name);
+        notifyObservers("crash");
     }
 
     public String getName() {
