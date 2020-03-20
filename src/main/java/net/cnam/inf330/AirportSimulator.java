@@ -13,12 +13,14 @@ public class AirportSimulator implements Observer {
     private int planeCount;
 
     private PriorityQueue<Plane> flyingPlanes;
+    // FIXME The type should be Queue<Plane>
     private Queue landedPlanes;
 
     public AirportSimulator() {
         this.tick = 1;
         this.planeCount = 0;
         flyingPlanes = new PriorityQueue<Plane>(10, new PlaneFuelComparator());
+        // FIXME The type should be LinkedList<Plane>
         landedPlanes = new LinkedList();
     }
 

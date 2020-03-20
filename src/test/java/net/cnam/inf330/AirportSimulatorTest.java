@@ -48,7 +48,7 @@ public class AirportSimulatorTest {
         simulator.simulateTurnWithNewPlanes(2, 3, new int[]{6, 2, 0});
         simulator.simulateTurnWithNewPlanes(1, 3, new int[]{0, 0, 0});
 
-        // TODO 7. Test that scenario 1 does not cause any plane crashes
+        // TODO FIXME 7. Test that scenario 1 does not cause any plane crashes
         // assert...
     }
 }
