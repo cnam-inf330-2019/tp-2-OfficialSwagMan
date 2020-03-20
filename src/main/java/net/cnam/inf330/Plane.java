@@ -19,6 +19,7 @@ public abstract class Plane extends Observable implements IPlane {
         this.name = name;
         this.isFlying = isFlying;
         this.fuelCapacity = fuelCapacity;
+        // FIXME this.addObserver();
     }
 
     public void fly() {
